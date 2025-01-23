@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head><body class="bg-custom-bg bg-cover bg-center">
+    <!-- Navbar -->
+    <header class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Healthy India Blogs</h1>
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'doctor_dashboard' %}" class="mr-4 text-blue-500 hover:underline">
+                        Welcome {{ user.username }}!
+                    </a>
+                   
+                
+                    <a href="{% url 'logout' %}" class="text-red-500 hover:underline">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-blue-500 hover:underline mr-4">Login</a>
+                    <a href="{% url 'signup' %}" class="text-green-500 hover:underline">Signup</a>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="w-full max-w-4xl p-6 mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Welcome to the Home Page</h1>
+
+        <!-- Display blogs -->
+        {% if blogs %}
+    <ul>
+        {% for blog in blogs %}
+            <li class="border p-4 mb-4">
+                {% if blog.image %}
+                    <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full h-48 object-cover mb-4">
+                {% endif %}
+                <h2 class="text-xl font-semibold">{{ blog.title }}</h2>
+                <p>{{ blog.summary }}</p>
+                {% if user.is_authenticated %}
+                    <!-- If the user is authenticated, show the full blog link -->
+                    <a href="{% url 'blog_detail' blog.id %}" class="text-blue-500 hover:underline">Read more</a>
+                {% else %}
+                    <!-- If the user is not authenticated, prompt them to log in or sign up -->
+                    <p class="text-sm text-gray-600">
+                        <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Read More</a>
+                    </p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No blogs available.</p>
+{% endif %}
+
+    </div>
+
+</body>
+</html>

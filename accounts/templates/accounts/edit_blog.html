@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">Edit Blog</h2>
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        value="{{ blog.title }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                        required
+                    />
+                </div>
+                <div>
+                    <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+                    <input
+                        type="file"
+                        name="image"
+                        id="image"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    />
+                    {% if blog.image %}
+                        <p class="mt-2 text-sm text-gray-500">Current Image: <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-32 h-32 object-cover"></p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                    <select
+                        name="category"
+                        id="category"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    >
+                        <option value="Health" {% if blog.category == 'Health' %}selected{% endif %}>Health</option>
+                        <option value="Wellness" {% if blog.category == 'Wellness' %}selected{% endif %}>Wellness</option>
+                        <option value="News" {% if blog.category == 'News' %}selected{% endif %}>News</option>
+                        <option value="Research" {% if blog.category == 'Research' %}selected{% endif %}>Research</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="summary" class="block text-sm font-medium text-gray-700">Summary</label>
+                    <textarea
+                        name="summary"
+                        id="summary"
+                        rows="3"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                        maxlength="500"
+                        required
+                    >{{ blog.summary }}</textarea>
+                </div>
+                <div>
+                    <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
+                    <textarea
+                        name="content"
+                        id="content"
+                        rows="6"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                        required
+                    >{{ blog.content }}</textarea>
+                </div>
+                <div>
+                    <label for="visibility" class="block text-sm font-medium text-gray-700">Visibility</label>
+                    <select
+                        name="visibility"
+                        id="visibility"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                    >
+                        <option value="draft" {% if blog.is_draft %}selected{% endif %}>Draft</option>
+                        <option value="published" {% if not blog.is_draft %}selected{% endif %}>Published</option>
+                    </select>
+                </div>
+                <button type="submit" class="px-4 py-2 text-blue-500 rounded-md hover:bg-blue-600">
+                    Save Changes
+                </button>
+                
+                <a href="{% url 'home' %}" class="px-4 py-2 text-blue-500 rounded-md">
+                    Home
+                </a>
+                
+                <button 
+                    type="button" 
+                    onclick="history.back()" 
+                    class="px-4 py-2 text-blue-500 rounded-md hover:bg-gray-200"
+                >
+                    Back
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

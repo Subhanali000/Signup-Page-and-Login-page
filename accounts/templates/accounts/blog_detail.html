@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ blog.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-white">
+
+    <!-- Navbar -->
+    <header class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Healthy India Blogs</h1>
+            <div>
+                {% if user.is_authenticated %}
+                    <span class="mr-4">Welcome, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="text-red-500 hover:underline">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="text-blue-500 hover:underline mr-4">Login</a>
+                    <a href="{% url 'signup' %}" class="text-green-500 hover:underline">Signup</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Blog Content -->
+    <div class="w-full max-w-4xl p-6 mx-auto">
+        <!-- Back to Home Button -->
+        <div class="mb-4">
+            <a href="{% url 'home' %}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Back to Home
+            </a>
+        </div>
+
+        <h1 class="text-3xl font-bold mb-6">{{ blog.title }}</h1>
+        <p class="text-gray-600 text-sm mb-4">Published on {{ blog.created_at|date:"F j, Y" }}</p>
+        
+        {% if blog.image %}
+            <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full mb-6 rounded-lg shadow-md">
+        {% else %}
+            <p class="text-gray-500 italic">No image available for this blog.</p>
+        {% endif %}
+        
+        <div class="prose">
+            {{ blog.content|safe }}
+        </div>
+    </div>
+
+</body>
+</html>

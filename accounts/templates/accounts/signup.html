@@ -6,12 +6,29 @@
     <title>Sign Up</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-white">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="w-full max-w-md p-6 bg-light-green rounded-lg shadow-md border-4 border-red-500">
+<body class="bg-image">
+
+    </style>div class="min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md border-4 border-red-500">
             <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+
+            <!-- Display error messages -->
+            {% if form.errors %}
+                <div class="bg-red-100 text-red-700 p-4 mb-6 border border-red-500 rounded-md">
+                    <ul>
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+
+                <!-- First Name & Last Name -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="space-y-2">
                         <label for="id_first_name" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -22,28 +39,39 @@
                         {{ form.last_name }}
                     </div>
                 </div>
-                
-                <div class="space-y-2">
+
+                <!-- Username -->
+                <div class="space-y-2 mt-4">
                     <label for="id_username" class="block text-sm font-medium text-gray-700">Username</label>
                     {{ form.username }}
                 </div>
-                <div class="space-y-2">
+
+                <!-- Email -->
+                <div class="space-y-2 mt-4">
                     <label for="id_email" class="block text-sm font-medium text-gray-700">Email</label>
                     {{ form.email }}
                 </div>
-                <div class="space-y-2">
+
+                <!-- Password -->
+                <div class="space-y-2 mt-4">
                     <label for="id_password1" class="block text-sm font-medium text-gray-700">Password</label>
                     {{ form.password1 }}
                 </div>
-                <div class="space-y-2">
+
+                <!-- Confirm Password -->
+                <div class="space-y-2 mt-4">
                     <label for="id_password2" class="block text-sm font-medium text-gray-700">Confirm Password</label>
                     {{ form.password2 }}
                 </div>
-                <div class="space-y-2">
+
+                <!-- User Type -->
+                <div class="space-y-2 mt-4">
                     <label for="id_user_type" class="block text-sm font-medium text-gray-700">User Type</label>
                     {{ form.user_type }}
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+
+                <!-- Address Line 1, City -->
+                <div class="grid grid-cols-2 gap-4 mt-4">
                     <div class="space-y-2">
                         <label for="id_address_line1" class="block text-sm font-medium text-gray-700">Address Line 1</label>
                         {{ form.address_line1 }}
@@ -53,7 +81,9 @@
                         {{ form.city }}
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+
+                <!-- State, Pincode -->
+                <div class="grid grid-cols-2 gap-4 mt-4">
                     <div class="space-y-2">
                         <label for="id_state" class="block text-sm font-medium text-gray-700">State</label>
                         {{ form.state }}
@@ -63,12 +93,17 @@
                         {{ form.pincode }}
                     </div>
                 </div>
+
+                <!-- Submit Button -->
                 <button type="submit" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded mt-6">Sign Up</button>
             </form>
+
+            <!-- Link to Login page -->
             <div class="mt-4 text-center">
                 <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Already have an account?</a>
             </div>
         </div>
     </div>
+
 </body>
-</html>  
+</html>

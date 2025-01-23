@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen p-6">
+        <!-- Dashboard Container -->
+        <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+            <div class="text-center mt-6">
+                
+              </div>
+            <h2 class="text-3xl font-bold text-center mb-6">Welcome, {{ user.first_name|default:user.username }}</h2>
+            <!-- User Info -->
+            <div class="mb-6">
+                <p class="text-lg text-gray-600"><strong>Username:</strong> {{ user.username }}</p>
+                <p class="text-lg text-gray-600"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="text-lg text-gray-600"><strong>First Name:</strong> {{ user.first_name|default:"N/A" }}</p>
+                <p class="text-lg text-gray-600"><strong>Last Name:</strong> {{ user.last_name|default:"N/A" }}</p>
+                <p class="text-lg text-gray-600"><strong>User Type:</strong> {{ user.user_type|default:"N/A" }}</p>
+            </div>
+            
+            <!-- Address Info -->
+            <div class="mb-6">
+                <p class="text-lg text-gray-600"><strong>Address:</strong> 
+                    {{ user.address_line1|default:"N/A" }}, 
+                    {{ user.city|default:"N/A" }},
+                    {{ user.state|default:"N/A" }},
+                    {{ user.pincode|default:"N/A" }}
+                </p>
+            </div>
+               
+            <!-- Logout -->
+            <div class="text-center mt-6">
+                <a href="{% url 'logout' %}" class="text-blue-500 hover:underline mr-4">
+                    Logout
+                </a>
+                <a href="{% url 'home' %}" class="px-4 py-2  text-blue-500 rounded-md ">
+                    Home
+                </a>
+            </div>
+            <!-- List of Blog Posts for Patient -->
+            <div class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">Available Blog Posts</h3>
+                {% if blogs %}
+                    <div class="grid grid-cols-1 gap-6">
+                        {% for blog in blogs %}
+                        <div class="p-4 bg-white rounded-lg shadow-md">
+                            {% if blog.image %}
+    <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full mb-6 rounded-lg shadow-md">
+{% else %}
+    <p class="text-gray-500 italic">No image available for this blog.</p>
+{% endif %}
+                            <h3 class="text-lg font-semibold">{{ blog.title }}</h3>
+                            <p class="text-sm text-gray-600">{{ blog.summary|truncatewords:15 }}...</p>
+                            <a href="{% url 'blog_detail' blog.id %}" class="text-blue-500 hover:underline mt-2 inline-block">Read More</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-gray-600">No blogs available at the moment.</p>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

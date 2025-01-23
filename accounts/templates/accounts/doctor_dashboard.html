@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctor Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+      <div class="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">
+          Welcome, {{ user.first_name|default:user.username }}
+        </h2>
+        <div class="mb-4">
+          <p class="text-sm text-gray-600">Username: {{ user.username }}</p>
+          <p class="text-sm text-gray-600">Email: {{ user.email }}</p>
+          <p class="text-sm text-gray-600">
+            First Name: {{ user.first_name|default:"N/A" }}
+          </p>
+          <p class="text-sm text-gray-600">
+            Last Name: {{ user.last_name|default:"N/A" }}
+          </p>
+          <p class="text-sm text-gray-600">User Type: Doctor</p>
+        </div>
+       
+        <!-- Blog Upload Section -->
+        <div class="mb-6">
+          <h3 class="text-lg font-bold mb-2">Upload a New Blog</h3>
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            action="{% url 'create_blog' %}"
+            class="space-y-4"
+          >
+            {% csrf_token %}
+            <div>
+              <label for="title" class="block text-sm font-medium text-gray-700"
+                >Title</label
+              >
+              <input
+                type="text"
+                name="title"
+                id="title"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                required
+              />
+            </div>
+            <div>
+              <label for="image" class="block text-sm font-medium text-gray-700"
+                >Image</label
+              >
+              <input
+                type="file"
+                name="image"
+                id="image"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+            <div>
+              <label
+                for="category"
+                class="block text-sm font-medium text-gray-700"
+                >Category</label
+              >
+              <select
+                name="category"
+                id="category"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="Health">Mental Health</option>
+                <option value="Wellness">Heart Disease</option>
+                <option value="News">Covid19</option>
+                <option value="Research"> Immunization</option>
+              </select>
+            </div>
+            <div>
+              <label
+                for="summary"
+                class="block text-sm font-medium text-gray-700"
+                >Summary</label
+              >
+              <textarea
+                name="summary"
+                id="summary"
+                rows="3"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                maxlength="500"
+                required
+                placeholder="Write a short summary (15 words max)."
+              ></textarea>
+              <p class="text-sm text-gray-500">
+                You can write up to 15 words in the summary.
+              </p>
+            </div>
+            <div>
+              <label
+                for="content"
+                class="block text-sm font-medium text-gray-700"
+                >Content</label
+              >
+              <textarea
+                name="content"
+                id="content"
+                rows="6"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <label class="inline-flex items-center">
+                <input
+                  type="checkbox"
+                  name="is_draft"
+                  class="form-checkbox rounded text-indigo-600"
+                />
+                <span class="ml-2 text-sm text-gray-700">Save as Draft</span>
+              </label>
+            </div>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Upload Blog
+            </button>
+          </form>
+        </div>
+
+        {% if messages %}
+        <div class="mb-4">
+          {% for message in messages %}
+          <div
+            class="{% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} p-2 rounded"
+          >
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="text-center mt-6">
+        <a href="{% url 'logout' %}" class="text-blue-500 hover:underline mr-4">
+            Logout
+        </a>
+        <a href="{% url 'home' %}" class="px-4 py-2  text-blue-500 rounded-md ">
+            Home
+        </a>
+    </div>
+        <!-- Uploaded Blogs Section -->
+<div>
+    <h3 class="text-lg font-bold mb-4">My Uploaded Blogs</h3>
+    <ul class="space-y-6">
+        {% for blog in blogs %}
+        <li class="border p-4 rounded-md bg-gray-50">
+            <h4 class="font-bold text-xl mb-2">{{ blog.title }}</h4>
+            
+            <!-- Image Section -->
+            {% if blog.image %}
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="w-full mb-4 rounded-lg shadow-md">
+            {% else %}
+                <p class="text-gray-500 italic mb-4">No image available for this blog.</p>
+            {% endif %}
+            
+            <!-- Blog Info -->
+            <p class="text-sm text-gray-600">Category: <span class="font-semibold">{{ blog.category }}</span></p>
+            <p class="text-sm text-gray-600">Summary: <span class="italic">{{ blog.summary|truncatewords:15 }}</span></p>
+
+            <!-- Blog Status (Draft/Published) -->
+            <p class="text-sm text-gray-600 mt-2">
+                {% if blog.is_draft %}
+                    <span class="text-yellow-500 font-bold">Draft (Private)</span>
+                {% else %}
+                    <span class="text-green-500 font-bold">Published (Public)</span>
+                {% endif %}
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="mt-4 flex justify-between">
+                <a href="{% url 'edit_blog' blog.id %}" class="text-blue-500 hover:underline">Edit</a>
+                <form method="post" action="{% url 'delete_blog' blog.id %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("form");
+        const summaryInput = document.getElementById("summary");
+        
+        form.addEventListener("submit", function(event) {
+            const summaryText = summaryInput.value.trim();
+            const wordCount = summaryText.split(/\s+/).length;
+
+            if (wordCount > 15) {
+                event.preventDefault(); // Prevent form submission
+                alert("Summary cannot exceed 15 words.");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
